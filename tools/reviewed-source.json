@@ -11,12 +11,12 @@
       "sha256": "c96a9a7a705a087d846b3de0a938cb60dbbadeda84c1be49d644d132e3c0905e"
     },
     "Prefs/SoloPrefs.m": {
-      "size": 43669,
-      "sha256": "75e366c1f4abaa121e7c0be0d44bcccd314f4747d9a623b4e7c208ef04263862"
+      "size": 38289,
+      "sha256": "3d6fc99d763f663e76cf9a06cd001175c595bc4be74b4ff578189b9f2e0b5c74"
     },
     "README.md": {
-      "size": 2129,
-      "sha256": "3f940552a0a938d10230069b669cfa9e9cea40a217661bb51cc1a5dd544f0712"
+      "size": 2908,
+      "sha256": "6c4243bf3b8e513cf37b0214cef8e89b2a76816afa576bb09e037ed5581ed9fa"
     },
     "Resources/Prefs/Info.plist": {
       "size": 549,

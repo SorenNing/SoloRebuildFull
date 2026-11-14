@@ -16,7 +16,11 @@
 - (id)rootController;
 - (void)setParentController:(id)controller;
 @end
-@interface PSListController : PSViewController
+@interface PSListController : PSViewController {
+@protected
+    NSArray *_specifiers;
+}
+- (void)reloadSpecifiers;
 - (NSArray *)loadSpecifiersFromPlistName:(NSString *)name target:(id)target;
 - (UITableView *)table;
 @end
@@ -85,16 +89,17 @@ static PSSpecifier *SOLSpecifier(NSDictionary *item, id target) {
     return s;
 }
 
-@interface SOLTableController : PSListController <UITableViewDataSource, UITableViewDelegate>
+// Own the single UIKit table directly. PSListController assumes its own
+// PSSpecifier/group arrays and must not drive these custom section delegates.
+@interface SOLTableController : PSViewController <UITableViewDataSource, UITableViewDelegate>
 @property(nonatomic,strong) UITableView *solTable;
 - (void)reloadSettings;
 - (void)pushController:(PSViewController *)controller item:(NSDictionary *)item;
 @end
-@interface SOLPreferenceController : SOLTableController
+@interface SOLPreferenceController : PSListController
 @property(nonatomic,copy) NSString *pageName;
 @property(nonatomic,strong) NSDictionary *configuration;
-@property(nonatomic,strong) NSArray *cachedSpecifiers;
-@property(nonatomic,strong) NSArray *sections;
+- (void)reloadSettings;
 - (NSString *)settingsPage;
 - (NSArray *)specifiers;
 - (id)readPreferenceValue:(PSSpecifier *)specifier;
@@ -130,7 +135,6 @@ static PSSpecifier *SOLSpecifier(NSDictionary *item, id target) {
 - (NSArray *)specifiers { return @[]; }
 - (void)viewDidLoad {
     [super viewDidLoad];
-    if ([self respondsToSelector:@selector(table)]) [self table].hidden = YES;
     self.solTable = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleInsetGrouped];
     self.solTable.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.solTable.dataSource = self; self.solTable.delegate = self;
@@ -154,7 +158,16 @@ static PSSpecifier *SOLSpecifier(NSDictionary *item, id target) {
 
 @implementation SOLPreferenceController
 - (NSString *)settingsPage { return self.pageName ?: [[self specifier] propertyForKey:@"plist"] ?: @"HomeScreen"; }
-- (void)viewDidLoad { [super viewDidLoad]; [self reloadSettings]; }
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadSettings) name:kReload object:nil];
+}
+- (void)dealloc { [[NSNotificationCenter defaultCenter] removeObserver:self]; }
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    CFPreferencesAppSynchronize((__bridge CFStringRef)kDomain);
+    [self reloadSettings];
+}
 - (BOOL)itemWanted:(NSDictionary *)item {
     NSString *version = UIDevice.currentDevice.systemVersion;
     if (item[@"minimumiOS"] && [version compare:item[@"minimumiOS"] options:NSNumericSearch] == NSOrderedAscending) return NO;
@@ -165,91 +178,39 @@ static PSSpecifier *SOLSpecifier(NSDictionary *item, id target) {
     if (!value) for (NSDictionary *candidate in self.configuration[@"items"]) if ([candidate[@"key"] isEqual:key]) { value = candidate[@"default"]; break; }
     return item[@"showWhenValue"] ? fabs([value doubleValue] - [item[@"showWhenValue"] doubleValue]) < 0.000001 : [value boolValue];
 }
-- (void)reloadSettings {
-    self.configuration = SOLConfig(SOLRootListController.class, [self settingsPage]);
-    self.title = self.configuration[@"title"] ?: self.title ?: @"Solo";
-    NSMutableArray *sections = [NSMutableArray array], *specs = [NSMutableArray array];
-    NSMutableDictionary *section = nil;
-    for (id raw in self.configuration[@"items"]) {
-        if (![raw isKindOfClass:NSDictionary.class] || ![self itemWanted:raw]) continue;
-        NSDictionary *item = raw;
-        [specs addObject:SOLSpecifier(item, self)];
-        if ([item[@"cell"] isEqual:@"PSGroupCell"]) {
-            section = [@{@"group":item, @"rows":[NSMutableArray array]} mutableCopy]; [sections addObject:section];
-        } else {
-            if (!section) { section = [@{@"group":@{}, @"rows":[NSMutableArray array]} mutableCopy]; [sections addObject:section]; }
-            [section[@"rows"] addObject:item];
+// The original Root/Section controllers populate PSListController._specifiers
+// (Root 0x41c0, Section 0x8164). Let the native controller own group indexing,
+// cell creation, selection and child navigation; do not add a second table.
+- (NSArray *)specifiers {
+    if (!_specifiers) {
+        self.configuration = SOLConfig(SOLRootListController.class, [self settingsPage]);
+        self.title = self.configuration[@"title"] ?: self.title ?: @"Solo";
+        NSArray *loaded = [self loadSpecifiersFromPlistName:[self settingsPage] target:self];
+        NSMutableArray *specs = [NSMutableArray array];
+        for (PSSpecifier *specifier in loaded) {
+            NSMutableDictionary *conditions = [NSMutableDictionary dictionary];
+            for (NSString *key in @[@"minimumiOS", @"maximumiOS", @"showWhenKey", @"showWhenValue"]) {
+                id value = [specifier propertyForKey:key];
+                if (value) conditions[key] = value;
+            }
+            if ([self itemWanted:conditions]) [specs addObject:specifier];
         }
+        _specifiers = [specs copy];
     }
-    // Keep explanatory/footer-only groups but omit empty compatibility headings.
-    NSIndexSet *empty = [sections indexesOfObjectsPassingTest:^BOOL(NSDictionary *s, NSUInteger i, BOOL *stop) { return ![s[@"rows"] count] && !s[@"group"][@"footerText"]; }];
-    [sections removeObjectsAtIndexes:empty];
-    self.sections = sections; self.cachedSpecifiers = specs;
-    if (!self.configuration) {
-        UILabel *error = [UILabel new]; error.numberOfLines = 0; error.textAlignment = NSTextAlignmentCenter;
-        error.text = [NSString stringWithFormat:@"无法读取 %@.plist，请检查 SoloPrefs.bundle 资源是否完整。", [self settingsPage]];
-        self.solTable.backgroundView = error;
-    } else self.solTable.backgroundView = nil;
-    [super reloadSettings];
+    return _specifiers;
 }
-- (NSArray *)specifiers { if (!self.cachedSpecifiers) [self reloadSettings]; return self.cachedSpecifiers ?: @[]; }
-- (id)readPreferenceValue:(PSSpecifier *)specifier { return SOLRead([specifier propertyForKey:@"key"]) ?: [specifier propertyForKey:@"default"]; }
+- (void)reloadSettings {
+    _specifiers = nil;
+    [self reloadSpecifiers];
+}
+- (id)readPreferenceValue:(PSSpecifier *)specifier {
+    return SOLRead([specifier propertyForKey:@"key"]) ?: [specifier propertyForKey:@"default"];
+}
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier *)specifier {
-    NSString *key = [specifier propertyForKey:@"key"]; if (!key.length) return;
-    if (!SOLWrite(value ? @{key:value} : @{}, value ? @[] : @[key])) SOLAlert(self, @"保存失败", @"偏好未能同步到磁盘，请重试。");
-    [self reloadSettings];
-}
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView { return self.sections.count; }
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { return [self.sections[section][@"rows"] count]; }
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section { return self.sections[section][@"group"][@"label"]; }
-- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section { return self.sections[section][@"group"][@"footerText"]; }
-- (NSDictionary *)itemAt:(NSIndexPath *)path { return self.sections[path.section][@"rows"][path.row]; }
-- (void)changed:(UIControl *)control {
-    NSString *key = control.accessibilityIdentifier; NSDictionary *item = nil;
-    for (NSDictionary *candidate in self.configuration[@"items"]) if ([candidate[@"key"] isEqual:key]) { item = candidate; break; }
-    id value = nil;
-    if ([control isKindOfClass:UISwitch.class]) value = @([(UISwitch *)control isOn]);
-    if ([control isKindOfClass:UISegmentedControl.class]) { NSInteger i = [(UISegmentedControl *)control selectedSegmentIndex]; if (i >= 0 && i < [item[@"validValues"] count]) value = item[@"validValues"][i]; }
-    if (value) [self setPreferenceValue:value specifier:SOLSpecifier(item, self)];
-}
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)path {
-    NSDictionary *item = [self itemAt:path];
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:nil];
-    cell.textLabel.text = item[@"label"]; cell.textLabel.numberOfLines = 0;
-    // Only original SF Symbol names are used; no new icon assets or mock previews.
-    if (item[@"symbol"]) cell.imageView.image = [UIImage systemImageNamed:item[@"symbol"]];
-    id value = [self readPreferenceValue:SOLSpecifier(item, self)];
-    if ([item[@"cell"] isEqual:@"PSSwitchCell"]) {
-        UISwitch *toggle = [UISwitch new]; toggle.on = [value boolValue]; toggle.accessibilityIdentifier = item[@"key"];
-        [toggle addTarget:self action:@selector(changed:) forControlEvents:UIControlEventValueChanged]; cell.accessoryView = toggle; cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if ([item[@"cell"] isEqual:@"PSSegmentCell"]) {
-        UISegmentedControl *segment = [[UISegmentedControl alloc] initWithItems:item[@"validTitles"]];
-        segment.frame = CGRectMake(0, 0, MIN(440, MAX(240, tableView.bounds.size.width - 80)), 34);
-        segment.accessibilityIdentifier = item[@"key"]; segment.accessibilityLabel = item[@"label"] ?: self.sections[path.section][@"group"][@"label"];
-        NSInteger idx = [item[@"validValues"] indexOfObject:value]; segment.selectedSegmentIndex = idx == NSNotFound ? UISegmentedControlNoSegment : idx;
-        [segment addTarget:self action:@selector(changed:) forControlEvents:UIControlEventValueChanged]; cell.accessoryView = segment; cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    } else if ([item[@"cell"] isEqual:@"PSLinkListCell"]) {
-        NSUInteger idx = [item[@"validValues"] indexOfObject:value]; if (idx != NSNotFound && idx < [item[@"validTitles"] count]) cell.detailTextLabel.text = item[@"validTitles"][idx];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    } else if ([item[@"cell"] isEqual:@"PSLinkCell"]) cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    else if ([item[@"cell"] isEqual:@"PSButtonCell"]) cell.textLabel.textColor = self.view.tintColor;
-    return cell;
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)path {
-    [tableView deselectRowAtIndexPath:path animated:YES]; NSDictionary *item = [self itemAt:path];
-    if ([item[@"cell"] isEqual:@"PSLinkListCell"]) {
-        UIAlertController *a = [UIAlertController alertControllerWithTitle:item[@"label"] message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        NSArray *values = item[@"validValues"], *titles = item[@"validTitles"];
-        for (NSUInteger i = 0; i < MIN(values.count, titles.count); i++) [a addAction:[UIAlertAction actionWithTitle:titles[i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) { [self setPreferenceValue:values[i] specifier:SOLSpecifier(item, self)]; }]];
-        [a addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
-        a.popoverPresentationController.sourceView = [tableView cellForRowAtIndexPath:path]; a.popoverPresentationController.sourceRect = [tableView cellForRowAtIndexPath:path].bounds;
-        [self presentViewController:a animated:YES completion:nil];
-    } else if ([item[@"cell"] isEqual:@"PSLinkCell"]) {
-        Class cls = NSClassFromString(item[@"detail"]); if ([cls isSubclassOfClass:PSViewController.class]) [self pushController:[cls new] item:item];
-        else SOLAlert(self, @"页面不可用", @"此设置控制器未随当前安装包加载。");
-    } else if (item[@"action"]) {
-        SEL action = NSSelectorFromString(item[@"action"]); if ([self respondsToSelector:action]) ((void (*)(id,SEL))objc_msgSend)(self,action);
-    }
+    NSString *key = [specifier propertyForKey:@"key"];
+    if (!key.length) return;
+    if (!SOLWrite(value ? @{key:value} : @{}, value ? @[] : @[key]))
+        SOLAlert(self, @"保存失败", @"偏好未能同步到磁盘，请重试。");
 }
 @end
 @implementation SOLSectionListController @end
