@@ -32,7 +32,7 @@ def main():
     assert len(ct.getmembers())==1 and ct.getmembers()[0].name=='./control'
     control=ct.extractfile('./control').read().decode()
     fields=dict(line.split(': ',1) for line in control.splitlines() if line)
-    assert fields['Version']=='1.0.1-15' and fields['Architecture']=='iphoneos-arm64e'
+    assert fields['Version']=='1.0.1-16' and fields['Architecture']=='iphoneos-arm64e'
     assert fields['Package']=='com.oakstheawesome.solo' and fields['Author']=='Ning&OaksTheAwesome' and fields['Maintainer']=='Ning'
     root=Path(__file__).resolve().parents[1]
     assert control==(root/'control').read_text(), 'control metadata differs from source'
@@ -56,7 +56,7 @@ def main():
     bundle='Library/PreferenceBundles/SoloPrefs.bundle/'
     import plistlib
     info=plistlib.loads(dt.extractfile(bundle+'Info.plist').read())
-    assert info['CFBundleVersion']==info['CFBundleShortVersionString']=='1.0.1-15'
+    assert info['CFBundleVersion']==info['CFBundleShortVersionString']=='1.0.1-16'
     for resource in (root/'Resources/SoloPrefs.bundle').iterdir():
         if resource.is_file(): assert dt.extractfile(bundle+resource.name).read()==resource.read_bytes(), resource.name
     for rel,src in (('Library/MobileSubstrate/DynamicLibraries/Solo.plist',root/'Solo.plist'),('Library/MobileSubstrate/DynamicLibraries/SoloEnhancements.plist',root/'SoloEnhancements.plist'),('Library/PreferenceLoader/Preferences/SoloPrefs.plist',root/'Resources/SoloPrefs.plist')):

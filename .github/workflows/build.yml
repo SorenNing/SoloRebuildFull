@@ -36,9 +36,9 @@ jobs:
       - name: Upload deb
         uses: actions/upload-artifact@v4
         with:
-          name: solo-rebuild-1.0.1-15
+          name: solo-rebuild-1.0.1-16
           path: |
-            dist/com.oakstheawesome.solo_1.0.1-15_iphoneos-arm64e.deb
+            dist/com.oakstheawesome.solo_1.0.1-16_iphoneos-arm64e.deb
             dist/program-verification.json
             tools/reviewed-source.json
           if-no-files-found: error

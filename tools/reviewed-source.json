@@ -1,10 +1,10 @@
 {
-  "version": "1.0.1-15",
+  "version": "1.0.1-16",
   "base_commit": "27d93cd0036e0ec0f305aa3132d7d4b1607ac4a4",
   "files": {
     ".github/workflows/build.yml": {
       "size": 1198,
-      "sha256": "a8121415937ea0559252adf192341b1bd479278889386381e59a189b4f82710c"
+      "sha256": "9df58aa3cc90ae9daff5d291f9fb6ec0ff581f75311448bf236f90a34218d8af"
     },
     "Makefile": {
       "size": 1970,
@@ -20,11 +20,11 @@
     },
     "Resources/Prefs/Info.plist": {
       "size": 549,
-      "sha256": "f3a7ca6c0121309e04a365b05c49e16c924db9a21013d85f11c6fd835efca825"
+      "sha256": "1f110d985d8003ea6f0c150fa96ab529cf54e2ae1aa3cec66c4d6eb8969921ce"
     },
     "Resources/Prefs/README.txt": {
       "size": 68,
-      "sha256": "3223111741eae1ad85ca066c955988e578fceba91d2c6b3cf77b37b5e1dafafd"
+      "sha256": "83402a0548980092d6dc72ca06c5f08fc01e7d91ad819137193c92d855726812"
     },
     "Resources/SoloPrefs.bundle/Calendar.plist": {
       "size": 722,
@@ -40,7 +40,7 @@
     },
     "Resources/SoloPrefs.bundle/Info.plist": {
       "size": 549,
-      "sha256": "f3a7ca6c0121309e04a365b05c49e16c924db9a21013d85f11c6fd835efca825"
+      "sha256": "1f110d985d8003ea6f0c150fa96ab529cf54e2ae1aa3cec66c4d6eb8969921ce"
     },
     "Resources/SoloPrefs.bundle/Media.plist": {
       "size": 671,
@@ -48,7 +48,7 @@
     },
     "Resources/SoloPrefs.bundle/Root.plist": {
       "size": 2109,
-      "sha256": "fde1ff7578ee837ba7ff8b465f44118b74982636f5016faa37340b3512a872c7"
+      "sha256": "200c7a9d5f0244cd74f1a875679c0a58de4e9c5339b3a067a90319e4a1e3479c"
     },
     "Resources/SoloPrefs.bundle/icon.png": {
       "size": 1826,
@@ -156,11 +156,11 @@
     },
     "control": {
       "size": 309,
-      "sha256": "58bfd0effa1721845c0437c2c03c5fbcffff603e25895f54bbeb1fb95d02cccf"
+      "sha256": "1df3ddcb5a63defde590974e98e9274395d73c2bfba3ec40fa8f6b034ce0b956"
     },
     "tools/ci-build.sh": {
-      "size": 2960,
-      "sha256": "b4673cfac98e80c7d1a089110a23633be81f5ca0e5b8081de6ccfb03fee0ee8c"
+      "size": 2891,
+      "sha256": "bfd7c49dc464466583165d262dbca393bf35433275ac4b2420cc7dde3aa951c7"
     },
     "tools/generate_interfaces.py": {
       "size": 3629,
@@ -168,7 +168,7 @@
     },
     "tools/package.py": {
       "size": 3546,
-      "sha256": "9b1aa04b4bc6e19192a0bdcdcccacec25693a2977d0ac468a2d34edbb9ddb67b"
+      "sha256": "327a2dad56f883bd5b949ac7e6ed80d2a1a52f445df39bff26c30a0629883fb7"
     },
     "tools/recovered-classes.json": {
       "size": 2212,
@@ -188,7 +188,7 @@
     },
     "tools/verify_package.py": {
       "size": 4350,
-      "sha256": "20da09cfc02d2fc6c93bbf6251c0d38fa1ee502c82d25c9268dccd4a75f0ca0b"
+      "sha256": "2279c5e12a9967ab989fb1c0c3ee220a6afe94a30d3e62ac819596f80d578d4a"
     },
     "tools/verify_programs.py": {
       "size": 35039,
