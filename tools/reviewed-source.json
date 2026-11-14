@@ -1,0 +1,198 @@
+{
+  "version": "1.0.1-15",
+  "base_commit": "27d93cd0036e0ec0f305aa3132d7d4b1607ac4a4",
+  "files": {
+    ".github/workflows/build.yml": {
+      "size": 1198,
+      "sha256": "a8121415937ea0559252adf192341b1bd479278889386381e59a189b4f82710c"
+    },
+    "Makefile": {
+      "size": 1970,
+      "sha256": "c96a9a7a705a087d846b3de0a938cb60dbbadeda84c1be49d644d132e3c0905e"
+    },
+    "Prefs/SoloPrefs.m": {
+      "size": 43669,
+      "sha256": "75e366c1f4abaa121e7c0be0d44bcccd314f4747d9a623b4e7c208ef04263862"
+    },
+    "README.md": {
+      "size": 2129,
+      "sha256": "3f940552a0a938d10230069b669cfa9e9cea40a217661bb51cc1a5dd544f0712"
+    },
+    "Resources/Prefs/Info.plist": {
+      "size": 549,
+      "sha256": "f3a7ca6c0121309e04a365b05c49e16c924db9a21013d85f11c6fd835efca825"
+    },
+    "Resources/Prefs/README.txt": {
+      "size": 68,
+      "sha256": "3223111741eae1ad85ca066c955988e578fceba91d2c6b3cf77b37b5e1dafafd"
+    },
+    "Resources/SoloPrefs.bundle/Calendar.plist": {
+      "size": 722,
+      "sha256": "03e697f972c6fcd5dd1fca69231425cf310d688063115c04fe97232bf781e27a"
+    },
+    "Resources/SoloPrefs.bundle/Clock.plist": {
+      "size": 862,
+      "sha256": "c39c1d44d2e08f0566a81c57a6683ea0d016edd5ffe3892e1b8d1da0416c01e4"
+    },
+    "Resources/SoloPrefs.bundle/HomeScreen.plist": {
+      "size": 2021,
+      "sha256": "4e4e9d59f568cb3baa58ed943c65d54dda07e995fc7a412f18ef5f4746c029c9"
+    },
+    "Resources/SoloPrefs.bundle/Info.plist": {
+      "size": 549,
+      "sha256": "f3a7ca6c0121309e04a365b05c49e16c924db9a21013d85f11c6fd835efca825"
+    },
+    "Resources/SoloPrefs.bundle/Media.plist": {
+      "size": 671,
+      "sha256": "abce0badb8a4021a67e680aed87cb027261caa1517a8d9dc913fb9621c8086c7"
+    },
+    "Resources/SoloPrefs.bundle/Root.plist": {
+      "size": 2109,
+      "sha256": "fde1ff7578ee837ba7ff8b465f44118b74982636f5016faa37340b3512a872c7"
+    },
+    "Resources/SoloPrefs.bundle/icon.png": {
+      "size": 1826,
+      "sha256": "4bef2d154defec6055e4a4d1374635dce7a5371279c87db9a25123199133bdaf"
+    },
+    "Resources/SoloPrefs.bundle/icon@2x.png": {
+      "size": 4475,
+      "sha256": "0c70ad378d21e44e952a2a6ef4878c1730a6feb1d0f6118867bc597a567d727e"
+    },
+    "Resources/SoloPrefs.bundle/icon@3x.png": {
+      "size": 7164,
+      "sha256": "d4fb87a7fb6a4a116dd309deca6eab954f7817e272524643f7ae00277828245a"
+    },
+    "Resources/SoloPrefs.bundle/logo@2x.png": {
+      "size": 13284,
+      "sha256": "42bd1511cc8f26a005eb72ad4392762183ddb3f42ed26a4eccb363ebcc7626c7"
+    },
+    "Resources/SoloPrefs.bundle/logo@3x.png": {
+      "size": 20792,
+      "sha256": "749280092b188e7e8dbe8f1ceb7dea0d13b6632f4d0b76ad2b72a12b8c7975a5"
+    },
+    "Resources/SoloPrefs.plist": {
+      "size": 140,
+      "sha256": "8ed77636d38b8e84eff25515188efbfbc98f3392c32b7dec2fb8cd1c9de992fe"
+    },
+    "Solo.plist": {
+      "size": 79,
+      "sha256": "e288f32facba14017e5bd88bdadaf86a0c4178c8e4e3bc0f05ca82ca9c3e1018"
+    },
+    "SoloEnhancements.plist": {
+      "size": 81,
+      "sha256": "efdce57ac8deb22ecbbe714eba0c187aceddd287d7948c1290ae426fe70b2a6e"
+    },
+    "Tweak/EnhancementsRecoveredClasses.m": {
+      "size": 26503,
+      "sha256": "d1747d3d86acec44cd58efea00b02db8650a044c0bed8e1f256067c0b8f02c9b"
+    },
+    "Tweak/RecoveredClassStubs.m": {
+      "size": 2879,
+      "sha256": "fa791c62ee8c251f7bc875fdf9841f7f17ac81fbf6243939fff06992a61202c2"
+    },
+    "Tweak/RecoveredInterfaces.h": {
+      "size": 30811,
+      "sha256": "21109e7c9193e86bfc3d06c9538adb9306c4056390e5b7c3497d3543047f16b5"
+    },
+    "Tweak/SOLActions.h": {
+      "size": 1488,
+      "sha256": "9a9489d966a44e59dd2f745a2038efb613069fbf915a08d5c7487e8174f22e45"
+    },
+    "Tweak/SOLActions.m": {
+      "size": 27949,
+      "sha256": "5e72519587cfd9bc889930ba5176a9efb0735dad741d7a9bd23764761db365d5"
+    },
+    "Tweak/SOLActionsCatalog.m": {
+      "size": 28065,
+      "sha256": "0f32318b6dd96c2c11f07ccce465a61013e8c421c36cfa3d836578b1674ac568"
+    },
+    "Tweak/SOLActionsInternal.h": {
+      "size": 2563,
+      "sha256": "d6951f74c7fd7dbeb5a6b347350213713e2aeed05286f3e9d0b8b008b120eeb1"
+    },
+    "Tweak/SOLActionsRail.m": {
+      "size": 6015,
+      "sha256": "5e0e7257859d198ba8a3c8b9f50eed7268dae35b7fc237e66431ab779a16ce9c"
+    },
+    "Tweak/SOLHome.h": {
+      "size": 1172,
+      "sha256": "b50e389999bd1110f332ccef3147ce6c7842bbc5502d6b83b4392f255610dd8d"
+    },
+    "Tweak/SOLHome.m": {
+      "size": 55520,
+      "sha256": "a08cce1368b4a8628e3f33eb8ad93c8c4ddcaab1423a6524b074b5a1ade84bcb"
+    },
+    "Tweak/SOLHookRuntime.h": {
+      "size": 691,
+      "sha256": "283564c4463231a3fe4114463a6149c3b7ecc43181ed7b1480dffbcc0dc2cde3"
+    },
+    "Tweak/SOLHookRuntime.m": {
+      "size": 4536,
+      "sha256": "85bc3d90d4addcca0eff1ad3a8649dadc4e687be679412e0508e2347f87bc5d3"
+    },
+    "Tweak/SOLPreferences.h": {
+      "size": 645,
+      "sha256": "4bc578b3e0eb2a9ae09ba29bbb64fbb6c387f5c003b000d8ccf82bad96210b8a"
+    },
+    "Tweak/SOLPreferences.m": {
+      "size": 3170,
+      "sha256": "9f58e281eb58908fdfcdfcab9e1c8144b603a87ce2eb05982163ae44b6955ce6"
+    },
+    "Tweak/SoloCore.m": {
+      "size": 8066,
+      "sha256": "6905b0c1d63be14cc00c15d810dbd9710afd167c8128fd672100c5f6423738e2"
+    },
+    "Tweak/SoloEnhancements.m": {
+      "size": 13988,
+      "sha256": "cf525aad7fa0a240f2e2577e34502b90efa00cdb1f1bfdb70205b93970dbb08c"
+    },
+    "Tweak/SoloRecoveredClasses.m": {
+      "size": 4748,
+      "sha256": "dcca540c44546ce11c1d7bc4d52d26da2bd55374470f992f8292f413b5362b66"
+    },
+    "Vendor/Headers/substrate.h": {
+      "size": 300,
+      "sha256": "87129ebb079a2715202492c199184a31d09dbceff5cf97059826981bce72ad4a"
+    },
+    "control": {
+      "size": 309,
+      "sha256": "58bfd0effa1721845c0437c2c03c5fbcffff603e25895f54bbeb1fb95d02cccf"
+    },
+    "tools/ci-build.sh": {
+      "size": 2960,
+      "sha256": "b4673cfac98e80c7d1a089110a23633be81f5ca0e5b8081de6ccfb03fee0ee8c"
+    },
+    "tools/generate_interfaces.py": {
+      "size": 3629,
+      "sha256": "52265f932b747a3a77355529ce39374d069bb6845ed0058459257d6278c06779"
+    },
+    "tools/package.py": {
+      "size": 3546,
+      "sha256": "9b1aa04b4bc6e19192a0bdcdcccacec25693a2977d0ac468a2d34edbb9ddb67b"
+    },
+    "tools/recovered-classes.json": {
+      "size": 2212,
+      "sha256": "8ca38cbb3126f52192531de3982c138911146de6200fe12bb6630fe018445f3b"
+    },
+    "tools/split_stubs.py": {
+      "size": 910,
+      "sha256": "7ebe13f54e42b376f875847d7b45f82b14e41e1d3a515fc06d92e349e158bdf2"
+    },
+    "tools/test_package.py": {
+      "size": 4075,
+      "sha256": "12fde23ccd7e814408509a85217e3a12b7589d1653e625787f2b918fb01d30ae"
+    },
+    "tools/validate_rebuild.py": {
+      "size": 2385,
+      "sha256": "b86c2bdb3335c0f2bc459d0d12423d89e5231925d8d35da21f21a6918bedf114"
+    },
+    "tools/verify_package.py": {
+      "size": 4350,
+      "sha256": "20da09cfc02d2fc6c93bbf6251c0d38fa1ee502c82d25c9268dccd4a75f0ca0b"
+    },
+    "tools/verify_programs.py": {
+      "size": 35039,
+      "sha256": "d3131331f013452998346767190251250d0152e82471a6450b1925eb70b2400f"
+    }
+  }
+}

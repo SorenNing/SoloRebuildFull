@@ -1,1 +1,1 @@
-Resources copied from Solo 1.0.1-12. Rebuild metadata is 1.0.1-13.\n
+Resources copied from Solo 1.0.1-12. Rebuild metadata is 1.0.1-15.\n

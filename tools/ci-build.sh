@@ -12,6 +12,7 @@ mkdir -p "$BUILD" "$DIST"
 COMMON=( -fobjc-arc -O2 -fblocks -isysroot "$SDK" -I"$ROOT/Tweak" -I"$ROOT/Vendor/Headers" \
   -F"$SDK/System/Library/PrivateFrameworks" \
   -Wno-deprecated-declarations -Wno-objc-property-implementation \
+  -Werror=implicit-function-declaration -Werror=incompatible-function-pointer-types -Werror=objc-method-access \
   -framework Foundation -framework UIKit -framework QuartzCore -framework CoreGraphics -framework CoreFoundation \
   -framework EventKit -framework MediaPlayer -framework PhotosUI -framework Preferences \
   -Wl,-undefined,dynamic_lookup )
@@ -45,6 +46,7 @@ for f in "$BUILD/Solo.dylib" "$BUILD/SoloEnhancements.dylib" "$BUILD/SoloPrefs";
   xcrun codesign --force --sign - --timestamp=none "$f"
 done
 
-python3 "$ROOT/tools/package.py" --root "$ROOT" --build "$BUILD" --output "$DIST/com.oakstheawesome.solo_1.0.1-14_iphoneos-arm64e.deb"
-python3 "$ROOT/tools/verify_package.py" "$DIST/com.oakstheawesome.solo_1.0.1-14_iphoneos-arm64e.deb"
-shasum -a 256 "$DIST/com.oakstheawesome.solo_1.0.1-14_iphoneos-arm64e.deb"
+python3 "$ROOT/tools/package.py" --root "$ROOT" --build "$BUILD" --output "$DIST/com.oakstheawesome.solo_1.0.1-15_iphoneos-arm64e.deb"
+python3 "$ROOT/tools/verify_package.py" "$DIST/com.oakstheawesome.solo_1.0.1-15_iphoneos-arm64e.deb"
+python3 "$ROOT/tools/verify_programs.py" "$DIST/com.oakstheawesome.solo_1.0.1-15_iphoneos-arm64e.deb" --output "$DIST/program-verification.json"
+shasum -a 256 "$DIST/com.oakstheawesome.solo_1.0.1-15_iphoneos-arm64e.deb"

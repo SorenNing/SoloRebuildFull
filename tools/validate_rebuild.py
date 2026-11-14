@@ -1,12 +1,25 @@
 #!/usr/bin/env python3
-import json, re, hashlib, os, sys
+import json, re, hashlib, os, sys, plistlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 errors=[]
-classes=[]
-for rel in ('evidence/Solo.icj.json','evidence/SoloEnhancements.icj.json'):
-    classes += json.loads((ROOT/rel).read_text())
-expected={x['classname'] for x in classes}
+manifest=json.loads((ROOT/'tools/reviewed-source.json').read_text())
+for rel, entry in manifest['files'].items():
+    path=ROOT/rel
+    if not path.is_file() or path.stat().st_size!=entry['size'] or hashlib.sha256(path.read_bytes()).hexdigest()!=entry['sha256']:
+        errors.append('source hash mismatch: '+rel)
+class_manifest=json.loads((ROOT/'tools/recovered-classes.json').read_text())
+expected=set(class_manifest['classes'])
+if len(expected)!=64: errors.append('recovered class count mismatch')
+control=(ROOT/'control').read_text()
+if 'Version: '+manifest['version']+'\n' not in control: errors.append('control version mismatch')
+for rel in ('Resources/SoloPrefs.bundle/Info.plist','Resources/Prefs/Info.plist'):
+    info=plistlib.loads((ROOT/rel).read_bytes())
+    if any(info.get(k)!=manifest['version'] for k in ('CFBundleVersion','CFBundleShortVersionString')):
+        errors.append('bundle version mismatch: '+rel)
+ci=(ROOT/'tools/ci-build.sh').read_text()
+for rel in ('Tweak/SOLHome.m','Tweak/SOLActions.m','Tweak/SOLActionsCatalog.m','Tweak/SOLActionsRail.m'):
+    if rel not in ci: errors.append('missing compile input: '+rel)
 text=(ROOT/'Tweak/RecoveredInterfaces.h').read_text()
 actual=set(re.findall(r'^@interface (\w+)', text, re.M)) - {'PSListController','PSViewController'}
 if expected != actual: errors.append('interface class set mismatch')
