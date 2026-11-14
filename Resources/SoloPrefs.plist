@@ -1,0 +1,1 @@
+{ entry = { cell = PSLinkCell; bundle = SoloPrefs; detail = SOLRootListController; icon = "icon.png"; label = Solo; isController = YES; }; }

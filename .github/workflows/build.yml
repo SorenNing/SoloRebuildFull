@@ -1,0 +1,41 @@
+name: build-solo-rebuild
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+      - name: Install package validation dependency
+        run: |
+          set -euo pipefail
+          if ! command -v dpkg-deb >/dev/null 2>&1; then
+            HOMEBREW_NO_AUTO_UPDATE=1 brew install dpkg
+          fi
+          command -v dpkg-deb
+          dpkg-deb --version
+      - name: Source and package validation
+        run: |
+          set -euo pipefail
+          python3 tools/validate_rebuild.py
+          python3 tools/test_package.py
+      - name: Build and package
+        run: |
+          set -euo pipefail
+          bash tools/ci-build.sh
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: solo-rebuild-1.0.1-14
+          path: dist/com.oakstheawesome.solo_1.0.1-14_iphoneos-arm64e.deb
+          if-no-files-found: error

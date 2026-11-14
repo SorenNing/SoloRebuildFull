@@ -1,0 +1,9 @@
+Package: com.oakstheawesome.solo
+Name: Solo Enhanced Rebuild
+Description: Reconstructed and maintainable Solo source baseline.
+Depends: firmware (>= 15.0), ellekit | mobilesubstrate, preferenceloader
+Section: Tweaks
+Author: Ning&OaksTheAwesome
+Maintainer: Ning
+Architecture: iphoneos-arm64e
+Version: 1.0.1-14
